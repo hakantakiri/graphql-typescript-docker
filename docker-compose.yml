@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+    db:
+        image: postgres:16.2
+        restart: always
+        env_file:
+            - .env.db
+        volumes:
+            - ./db_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+        ports:
+            - 5432:5432
+
+    redis:
+        image: redis:7.2.4
+        restart: always
+        ports:
+            - 6379:6379
+
+    backend:
+        build: .
+        restart: always
+        env_file:
+            - .env.backend
+        volumes:
+            - .:/usr/src/app
+        ports:
+            - 4000:4000
+        depends_on:
+            - db
+            - redis
+        command:
+            - npm
+            - start

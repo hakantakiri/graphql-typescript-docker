@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model coach {
+  id          Int     @id
+  name        String?
+  dateOfBirth String? @map("date_of_birth")
+  nationality String?
+  teamId      Int?    @map("team_id")
+  team        team?   @relation(fields: [teamId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model competition {
+  id               Int                @id
+  name             String?
+  code             String?
+  type             String?
+  emblem           String?
+  team_competition competition_team[]
+}
+
+model player {
+  id          Int     @id
+  name        String?
+  position    String?
+  dateOfBirth String? @map("date_of_birth")
+  nationality String?
+  teamId      Int?    @map("team_id")
+  team        team?   @relation(fields: [teamId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_team")
+}
+
+model team {
+  id               Int                @id
+  name             String?
+  shortName        String?            @map("short_name")
+  tla              String?
+  crest            String?
+  address          String?
+  website          String?
+  founded          Int?
+  clubColors       String?            @map("club_colors")
+  venue            String?
+  coach            coach[]
+  team_competition competition_team[]
+  player           player[]
+}
+
+model competition_team {
+  id            Int          @id @default(autoincrement())
+  competitionId Int?         @map("competition_id")
+  teamId        Int?         @map("team_id")
+  competition   competition? @relation(fields: [competitionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_competition")
+  team          team?        @relation(fields: [teamId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_team")
+}
