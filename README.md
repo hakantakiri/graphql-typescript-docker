@@ -113,3 +113,25 @@ Currently there are basic unit tests for the following scenarios specified as im
 
 Use `npx prisma pull db` to generate prisma schema from database.
 Use `npx prisma generate` to generate a client for the backend to use.
+
+## Env files
+
+In order for the app to run you need to create two .env files at the root of your project with the following formats. For this you need your football-data API_KEY.
+
+**.env.db**
+
+```
+POSTGRES_PASSWORD=league_pwd
+POSTGRES_USER=league_backend
+POSTGRES_DB=league_db
+```
+
+**.env.backend**
+
+```
+DATABASE_URL="postgresql://league_backend:league_pwd@db:5432/league_db?schema=importer"
+REDIS_HOST=redis
+REDIS_PORT=6379
+BASE_FOOTBALL_API_URL="https://api.football-data.org/v4/"
+FOOTBALL_DATA_API_KEY=<YOUR_API_KEY>
+```
