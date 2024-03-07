@@ -18,12 +18,15 @@ services:
             - 6379:6379
 
     backend:
-        build: .
+        build:
+            context: .
+            dockerfile: Dockerfile
         restart: always
         env_file:
             - .env.backend
         volumes:
             - .:/usr/src/app
+            - /usr/src/app/node_modules
         ports:
             - 4000:4000
         depends_on:
